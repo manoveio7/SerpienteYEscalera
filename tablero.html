@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Generador de Tablero</title>
+    <style>
+        body { background: #0b0b1a; color: white; text-align: center; font-family: sans-serif; padding: 20px; }
+        canvas { border: 4px solid #00f2fe; border-radius: 12px; box-shadow: 0 0 20px #00f2fe55; }
+        button { background: #ff3366; color: white; border: none; padding: 12px 24px; font-size: 18px; border-radius: 8px; font-weight: bold; margin-top: 15px; cursor: pointer; }
+    </style>
+</head>
+<body>
+
+    <h2>🎨 Tu Nuevo Tablero Generado</h2>
+    <canvas id="canvasTablero" width="750" height="750"></canvas><br>
+    <button onclick="descargarTablero()">📥 Guardar Tablero PNG</button>
+
+    <script>
+        const canvas = document.getElementById('canvasTablero');
+        const ctx = canvas.getContext('2d');
+
+        // Fondo del tablero
+        ctx.fillStyle = '#12122b';
+        ctx.fillRect(0, 0, 750, 750);
+
+        const tamano = 75; // 750px / 10
+        const paleta1 = '#1a1a3e';
+        const paleta2 = '#2d1b4e';
+
+        // Dibujar Cuadrícula 10x10
+        for (let num = 1; num <= 100; num++) {
+            let idx = num - 1;
+            let fila = Math.floor(idx / 10);
+            let col = idx % 10;
+            if (fila % 2 !== 0) col = 9 - col;
+
+            let x = col * tamano;
+            let y = (9 - fila) * tamano;
+
+            // Alternar colores vistosos
+            ctx.fillStyle = ((col + fila) % 2 === 0) ? paleta1 : paleta2;
+            ctx.fillRect(x, y, tamano, tamano);
+
+            // Borde
+            ctx.strokeStyle = '#3d3d75';
+            ctx.lineWidth = 1;
+            ctx.strokeRect(x, y, tamano, tamano);
+
+            // Números
+            ctx.fillStyle = '#00f2fe';
+            ctx.font = 'bold 16px Arial';
+            ctx.fillText(num, x + 8, y + 22);
+        }
+
+        // Función para dibujar una escalera vistosa
+        function dibujarEscalera(c1, c2, color = '#00ff88') {
+            let p1 = getPos(c1);
+            let p2 = getPos(c2);
+            ctx.strokeStyle = color;
+            ctx.lineWidth = 6;
+            ctx.beginPath();
+            ctx.moveTo(p1.x, p1.y);
+            ctx.lineTo(p2.x, p2.y);
+            ctx.stroke();
+        }
+
+        // Función para dibujar una serpiente ondulada
+        function dibujarSerpiente(c1, c2, color = '#ff3366') {
+            let p1 = getPos(c1);
+            let p2 = getPos(c2);
+            ctx.strokeStyle = color;
+            ctx.lineWidth = 8;
+            ctx.beginPath();
+            ctx.moveTo(p1.x, p1.y);
+            let midX = (p1.x + p2.x) / 2 + 30;
+            let midY = (p1.y + p2.y) / 2 - 30;
+            ctx.quadraticCurveTo(midX, midY, p2.x, p2.y);
+            ctx.stroke();
+        }
+
+        function getPos(num) {
+            let idx = num - 1;
+            let fila = Math.floor(idx / 10);
+            let col = idx % 10;
+            if (fila % 2 !== 0) col = 9 - col;
+            return { x: col * tamano + tamano/2, y: (9 - fila) * tamano + tamano/2 };
+        }
+
+        // Escaleras (Verdes)
+        dibujarEscalera(4, 14);
+        dibujarEscalera(9, 31);
+        dibujarEscalera(20, 38);
+        dibujarEscalera(28, 84);
+        dibujarEscalera(40, 59);
+
+        // Serpientes (Rojas)
+        dibujarSerpiente(17, 7);
+        dibujarSerpiente(54, 34);
+        dibujarSerpiente(62, 19);
+        dibujarSerpiente(87, 24);
+        dibujarSerpiente(99, 78);
+
+        function descargarTablero() {
+            let enlace = document.createElement('a');
+            enlace.download = 'tablero.png';
+            enlace.href = canvas.toDataURL();
+            enlace.click();
+        }
+    </script>
+</body>
+</html>
