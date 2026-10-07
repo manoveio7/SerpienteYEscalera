@@ -65,9 +65,9 @@ function dibujarCurvasEnpantalla(){
 }
 
 function carga() {
-    this.load.image('tablero', 'img/tablero2.png');
-    this.load.image('dado', 'img/dado.png');
-    this.load.image('flecha', 'img/flecha.png');
+    this.load.image('tablero', './img/tablero2.png');
+    this.load.image('dado', './img/dado.png');
+    this.load.image('flecha', './img/flecha.png');
     
     // Carga audios....
     this.load.audio('auGiraDado', './audios/giraDado.ogg');
